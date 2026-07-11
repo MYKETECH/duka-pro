@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>DukaPro – Smart Shop Platform 🇰🇪</title>
+<meta name="theme-color" content="#6C3CE1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DukaPro">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236C3CE1'/%3E%3Ctext x='50' y='68' font-size='54' text-anchor='middle'%3E%F0%9F%9B%92%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">🛒</div>
+  <div class="splash-name">DukaPro</div>
+  <div class="splash-tag">Smart Shop Platform · Kenya 🇰🇪</div>
+  <div class="splash-bar"><div class="splash-fill"></div></div>
+</div>
+
+<!-- AUTH -->
+<div id="auth-screen" style="display:flex">
+  <div class="auth-bg"></div>
+  <div class="auth-card">
+    <div class="auth-logo-row">
+      <div class="auth-logo-icon">🛒</div>
+      <div>
+        <div class="auth-brand">DukaPro</div>
+        <div class="auth-brand-tag">Smart Shop Platform · Kenya 🇰🇪</div>
+      </div>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="showAuthTab('login')">Sign In</div>
+      <div class="auth-tab" onclick="showAuthTab('signup')">Create Account</div>
+    </div>
+    <!-- LOGIN -->
+    <div id="auth-login" class="auth-panel active">
+      <div class="auth-h">Welcome back 👋</div>
+      <div class="auth-sub">Sign in to access your shop dashboard</div>
+      <div class="input-wrap">
+        <i class="fas fa-envelope input-icon"></i>
+        <input class="auth-input" type="email" id="login-email" placeholder="your@email.com">
+      </div>
+      <div class="input-wrap" style="position:relative">
+        <i class="fas fa-lock input-icon"></i>
+        <input class="auth-input" type="password" id="login-pass" placeholder="Password" style="padding-right:42px">
+        <i class="fas fa-eye" id="login-eye" onclick="togglePass('login-pass','login-eye')" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text3);cursor:pointer;font-size:14px;z-index:1"></i>
+      </div>
+      <div class="auth-err" id="login-err"></div>
+      <div id="login-success" style="display:none;background:#ECFDF5;border:1.5px solid #6EE7B7;color:#065F46;font-size:13px;font-weight:600;padding:12px 14px;border-radius:12px;margin-bottom:12px;line-height:1.6;animation:fadeUp .3s ease"></div>
+      <div style="text-align:right;margin-bottom:10px">
+        <span onclick="doForgotPassword()" style="font-size:12px;color:var(--p1);font-weight:700;cursor:pointer;text-decoration:underline">
+          <i class="fas fa-key"></i> Forgot Password?
+        </span>
+      </div>
+      <button class="btn-auth btn-auth-primary" onclick="doLogin()" id="login-btn">
+        <i class="fas fa-sign-in-alt"></i> Sign In to My Shop
+      </button>
+      <div class="auth-divider">or continue with</div>
+      <button class="btn-auth btn-auth-google" onclick="doGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+    </div>
+    <!-- SIGNUP -->
+    <div id="auth-signup" class="auth-panel">
+      <div class="auth-h">Create your shop 🏪</div>
+      <div class="auth-sub">Join thousands of Kenyan shop owners on DukaPro</div>
+      <div class="input-wrap">
+        <i class="fas fa-store input-icon"></i>
+        <input class="auth-input" type="text" id="signup-shop" placeholder="Shop name e.g. Wanjiru General Store">
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-envelope input-icon"></i>
+        <input class="auth-input" type="email" id="signup-email" placeholder="your@email.com">
+      </div>
+      <div class="input-wrap">
+        <i class="fas fa-phone input-icon"></i>
+        <input class="auth-input" type="tel" id="signup-phone" placeholder="07XX XXX XXX (optional)">
+      </div>
+      <div class="input-wrap" style="position:relative">
+        <i class="fas fa-lock input-icon"></i>
+        <input class="auth-input" type="password" id="signup-pass" placeholder="Password (min 6 characters)" style="padding-right:42px">
+        <i class="fas fa-eye" id="signup-eye" onclick="togglePass('signup-pass','signup-eye')" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text3);cursor:pointer;font-size:14px;z-index:1"></i>
+      </div>
+      <div class="auth-err" id="signup-err"></div>
+      <button class="btn-auth btn-auth-primary" onclick="doSignup()" id="signup-btn">
+        <i class="fas fa-rocket"></i> Create My Shop Account
+      </button>
+      <div class="auth-divider">or</div>
+      <button class="btn-auth btn-auth-google" onclick="doGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Sign up with Google
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-screen" style="display:none">
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-brand">
+        <div class="sb-icon">🛒</div>
+        <div><div class="sb-name">DukaPro</div><div class="sb-tag">Smart Shop Platform</div></div>
+      </div>
+      <button class="sb-close" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="sb-profile">
+      <div class="sb-avatar" id="sb-avatar">S</div>
+      <div><div class="sb-shop-name" id="sb-shop-name">My Shop</div><div class="sb-shop-email" id="sb-shop-email"></div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section">Main</div>
+      <div class="nav-item active" onclick="navigate('dashboard')" id="nav-dashboard"><div class="nav-icon"><i class="fas fa-chart-line"></i></div>Dashboard<span class="pulse-dot" style="margin-left:auto;width:8px;height:8px;background:#10B981;border-radius:50%;animation:pulse 2s infinite;display:inline-block"></span></div>
+      <div class="nav-item" onclick="navigate('history')" id="nav-history"><div class="nav-icon"><i class="fas fa-calendar-alt"></i></div>History<span class="nav-badge" id="nb-days">0</span></div>
+      <div class="sb-section">Operations</div>
+      <div class="nav-item" onclick="navigate('stock')" id="nav-stock"><div class="nav-icon"><i class="fas fa-boxes"></i></div>Opening Stock</div>
+      <div class="nav-item" onclick="navigate('sales')" id="nav-sales"><div class="nav-icon"><i class="fas fa-shopping-cart"></i></div>Record Sale<span class="nav-badge" id="nb-sales">0</span></div>
+      <div class="nav-item" onclick="navigate('expenses')" id="nav-expenses"><div class="nav-icon"><i class="fas fa-receipt"></i></div>Expenses</div>
+      <div class="sb-section">Account</div>
+      <div class="nav-item" onclick="navigate('profile')" id="nav-profile"><div class="nav-icon"><i class="fas fa-user-circle"></i></div>My Profile</div>
+      <div class="sb-section">End of Day</div>
+      <div class="nav-item" onclick="navigate('closing')" id="nav-closing"><div class="nav-icon"><i class="fas fa-lock"></i></div>Closing Stock</div>
+      <div class="nav-item" onclick="navigate('report')" id="nav-report"><div class="nav-icon"><i class="fas fa-file-invoice"></i></div>Daily Report</div>
+    </div>
+    <button class="sb-logout" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+  </nav>
+  <!-- HEADER -->
+  <header class="app-header">
+    <button class="hamburger" onclick="openSidebar()"><div class="ham-line"></div><div class="ham-line" style="width:14px"></div><div class="ham-line"></div></button>
+    <div class="hdr-center"><div class="hdr-title" id="hdr-title">Dashboard</div><div class="hdr-sub" id="hdr-sub"></div></div>
+    <div class="hdr-actions">
+      <button class="hdr-btn" onclick="navigate('report')" title="Report"><i class="fas fa-file-invoice"></i></button>
+      <button class="hdr-btn" onclick="exportPDF()" title="Export PDF"><i class="fas fa-download"></i></button>
+    </div>
+  </header>
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="date-bar">
+        <i class="fas fa-calendar" style="color:var(--p1);font-size:13px"></i>
+        <button class="date-nav" onclick="changeDay(-1)"><i class="fas fa-chevron-left"></i></button>
+        <input type="date" id="dash-date" onchange="onDashDateChange()">
+        <button class="date-nav" onclick="changeDay(1)"><i class="fas fa-chevron-right"></i></button>
+        <button class="today-pill" onclick="goToday()">Today</button>
+      </div>
+      <div class="hero-card">
+        <div class="hero-bg-img"></div>
+        <div class="hero-badge"><i class="fas fa-circle" style="color:#10B981;font-size:7px"></i> Live · <span id="hero-date-label"></span></div>
+        <div class="hero-label"><i class="fas fa-coins"></i> Total Revenue</div>
+        <div class="hero-amount"><sup>KSh </sup><span id="h-sales">0.00</span></div>
+        <div class="hero-profit" id="h-profit-pill"><i class="fas fa-trending-up"></i> Profit: KSh 0.00</div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="hs-label"><i class="fas fa-mobile-alt"></i> M-Pesa</div><div class="hs-val" id="h-mpesa">0.00</div></div>
+          <div class="hero-stat"><div class="hs-label"><i class="fas fa-coins"></i> Cash</div><div class="hs-val" id="h-cash">0.00</div></div>
+          <div class="hero-stat"><div class="hs-label"><i class="fas fa-receipt"></i> Expenses</div><div class="hs-val" id="h-exp">0.00</div></div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card purple"><div class="stat-icon"><i class="fas fa-shopping-bag"></i></div><div class="stat-label">Sales Today</div><div class="stat-value" id="d-count">0</div></div>
+        <div class="stat-card gold"><div class="stat-icon"><i class="fas fa-boxes"></i></div><div class="stat-label">Stock Units</div><div class="stat-value" id="d-stock">0</div></div>
+        <div class="stat-card green"><div class="stat-icon"><i class="fas fa-chart-bar"></i></div><div class="stat-label">Net Profit</div><div class="stat-value" id="d-profit">0</div></div>
+        <div class="stat-card red"><div class="stat-icon"><i class="fas fa-receipt"></i></div><div class="stat-label">Expenses</div><div class="stat-value" id="d-exp-count">0</div></div>
+      </div>
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <div class="qa-btn" onclick="navigate('sales')"><div class="qa-icon" style="background:rgba(108,60,225,.12)"><i class="fas fa-plus" style="color:var(--p1)"></i></div><div class="qa-label">New Sale</div></div>
+        <div class="qa-btn" onclick="navigate('expenses')"><div class="qa-icon" style="background:rgba(245,166,35,.12)"><i class="fas fa-minus" style="color:var(--acc2)"></i></div><div class="qa-label">Expense</div></div>
+        <div class="qa-btn" onclick="navigate('stock')"><div class="qa-icon" style="background:rgba(16,185,129,.12)"><i class="fas fa-boxes" style="color:var(--success)"></i></div><div class="qa-label">Add Stock</div></div>
+        <div class="qa-btn" onclick="navigate('report')"><div class="qa-icon" style="background:rgba(59,130,246,.12)"><i class="fas fa-file-alt" style="color:var(--info)"></i></div><div class="qa-label">Report</div></div>
+      </div>
+      <!-- Weekly Chart -->
+      <div class="chart-card">
+        <div class="chart-title"><i class="fas fa-chart-bar" style="color:var(--p1)"></i> Weekly Sales</div>
+        <div class="chart-sub">Last 7 days revenue overview</div>
+        <div class="bar-chart" id="weekly-chart"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px" id="weekly-labels"></div>
+      </div>
+      <!-- Low Stock -->
+      <div id="low-stock-section"></div>
+      <div class="sec-title"><i class="fas fa-history"></i> Recent Sales</div>
+      <div class="record-list" id="dash-recent"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="page" id="page-history">
+      <div class="sec-title"><i class="fas fa-calendar-alt"></i> All Past Days</div>
+      <div id="history-list"><div class="empty-state"><div class="empty-img">🗓️</div><div class="empty-title">No history yet</div><div class="empty-sub">Your daily records will build up here</div></div></div>
+    </div>
+
+    <!-- STOCK -->
+    <div class="page" id="page-stock">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0"><i class="fas fa-plus-circle"></i> Add Stock Item</div>
+        <div class="form-group"><label><i class="fas fa-tag"></i> Item Name</label><input class="input-field" type="text" id="st-name" placeholder="e.g. Unga 2kg, Sugar 1kg, Airtime..."></div>
+        <div class="form-row">
+          <div class="form-group"><label><i class="fas fa-sort-numeric-up"></i> Quantity</label><input class="input-field" type="number" id="st-qty" placeholder="0" min="0"></div>
+          <div class="form-group"><label><i class="fas fa-layer-group"></i> Category</label>
+            <select class="input-field" id="st-cat">
+              <option>Food & Groceries</option><option>Drinks</option><option>Household</option><option>Electronics</option><option>Clothing</option><option>Stationery</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label><i class="fas fa-arrow-down"></i> Cost Price (KSh)</label><input class="input-field" type="number" id="st-cost" placeholder="0.00" min="0"></div>
+          <div class="form-group"><label><i class="fas fa-arrow-up"></i> Selling Price (KSh)</label><input class="input-field" type="number" id="st-sell" placeholder="0.00" min="0"></div>
+        </div>
+        <div class="form-group"><label><i class="fas fa-calendar"></i> Date</label><input class="input-field" type="date" id="st-date"></div>
+        <button class="btn btn-primary" onclick="addStock()"><i class="fas fa-plus"></i> Add to Inventory</button>
+      </div>
+      <div class="sec-title"><i class="fas fa-warehouse"></i> Current Inventory</div>
+      <div class="search-bar"><div class="search-wrap"><i class="fas fa-search"></i><input class="input-field" type="text" placeholder="Search items..." oninput="filterStock(this.value)"></div></div>
+      <div class="record-list" id="stock-list"><div class="empty-state"><div class="empty-img">📦</div><div class="empty-title">No stock yet</div><div class="empty-sub">Add your first item above</div></div></div>
+    </div>
+
+    <!-- SALES -->
+    <div class="page" id="page-sales">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0"><i class="fas fa-shopping-cart"></i> Record a Sale</div>
+        <div class="form-group"><label><i class="fas fa-boxes"></i> Select Item</label>
+          <select class="input-field" id="sl-item" onchange="fillSellPrice()"><option value="">— Choose item from stock —</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label><i class="fas fa-sort-numeric-up"></i> Quantity</label><input class="input-field" type="number" id="sl-qty" placeholder="1" min="1"></div>
+          <div class="form-group"><label><i class="fas fa-tag"></i> Price (KSh)</label><input class="input-field" type="number" id="sl-price" placeholder="0.00"></div>
+        </div>
+        <div class="form-group"><label><i class="fas fa-calculator"></i> Total</label>
+          <div style="font-size:20px;font-weight:900;color:var(--p1);font-family:var(--mono);padding:8px 14px;background:rgba(108,60,225,.06);border-radius:12px;border:1px solid var(--border2)" id="sl-total">KSh 0.00</div>
+        </div>
+        <div class="form-group"><label><i class="fas fa-credit-card"></i> Payment Method</label>
+          <div class="pay-toggle">
+            <div class="pay-opt active" id="pay-mpesa" onclick="setPayment('M-Pesa')"><i class="fas fa-mobile-alt"></i> M-Pesa</div>
+            <div class="pay-opt" id="pay-cash" onclick="setPayment('Cash')"><i class="fas fa-coins"></i> Cash</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label><i class="fas fa-clock"></i> Time</label><input class="input-field" type="time" id="sl-time"></div>
+          <div class="form-group"><label><i class="fas fa-phone"></i> Phone (Optional)</label><input class="input-field" type="tel" id="sl-phone" placeholder="07XX..."></div>
+        </div>
+        <button class="btn btn-success" onclick="addSale()"><i class="fas fa-check-circle"></i> Record Sale</button>
+      </div>
+      <div class="sec-title"><i class="fas fa-receipt"></i> Sales History</div>
+      <div class="search-bar"><div class="search-wrap"><i class="fas fa-search"></i><input class="input-field" type="text" id="sales-search" placeholder="Search item or phone..." oninput="renderSales()"></div></div>
+      <div class="chips">
+        <div class="chip active" id="chip-all" onclick="setFilter('all')">All</div>
+        <div class="chip" id="chip-mpesa" onclick="setFilter('M-Pesa')"><i class="fas fa-mobile-alt"></i> M-Pesa</div>
+        <div class="chip" id="chip-cash" onclick="setFilter('Cash')"><i class="fas fa-coins"></i> Cash</div>
+      </div>
+      <div class="record-list" id="sales-list"><div class="empty-state"><div class="empty-img">🧾</div><div class="empty-title">No sales yet</div></div></div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div class="page" id="page-expenses">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0"><i class="fas fa-minus-circle"></i> Add Expense</div>
+        <div class="form-group"><label><i class="fas fa-align-left"></i> Description</label><input class="input-field" type="text" id="ex-name" placeholder="e.g. Rent, Transport, Stock Purchase..."></div>
+        <div class="form-group"><label><i class="fas fa-tag"></i> Category</label>
+          <select class="input-field" id="ex-cat">
+            <option>Rent</option><option>Utilities</option><option>Transport</option><option>Stock Purchase</option><option>Salaries</option><option>Marketing</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label><i class="fas fa-coins"></i> Amount (KSh)</label><input class="input-field" type="number" id="ex-amount" placeholder="0.00" min="0"></div>
+          <div class="form-group"><label><i class="fas fa-calendar"></i> Date</label><input class="input-field" type="date" id="ex-date"></div>
+        </div>
+        <button class="btn btn-danger" onclick="addExpense()"><i class="fas fa-plus"></i> Add Expense</button>
+      </div>
+      <div class="sec-title"><i class="fas fa-list"></i> Expense Records</div>
+      <div class="record-list" id="expense-list"><div class="empty-state"><div class="empty-img">💸</div><div class="empty-title">No expenses yet</div></div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0"><i class="fas fa-store"></i> Shop Profile</div>
+        <div style="text-align:center;margin-bottom:20px">
+          <div style="width:70px;height:70px;background:linear-gradient(135deg,var(--p1),var(--p3));border-radius:20px;display:grid;place-items:center;font-size:32px;font-weight:900;color:#fff;margin:0 auto 10px;box-shadow:0 6px 20px var(--p-glow)" id="profile-avatar">S</div>
+          <div style="font-size:16px;font-weight:800" id="profile-name">My Shop</div>
+          <div style="font-size:12px;color:var(--text3)" id="profile-email"></div>
+        </div>
+        <div class="form-group"><label><i class="fas fa-store"></i> Shop Name</label><input class="input-field" type="text" id="prof-shop" placeholder="Your shop name"></div>
+        <div class="form-group"><label><i class="fas fa-phone"></i> Phone Number</label><input class="input-field" type="tel" id="prof-phone" placeholder="07XX XXX XXX"></div>
+        <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Location</label><input class="input-field" type="text" id="prof-location" placeholder="e.g. Rongo, Migori County"></div>
+        <div class="form-group"><label><i class="fas fa-tag"></i> Business Type</label>
+          <select class="input-field" id="prof-type">
+            <option>General Shop</option><option>Supermarket</option><option>Pharmacy</option><option>Hardware</option><option>Boutique</option><option>Electronics</option><option>Other</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="saveProfile()" style="margin-bottom:10px"><i class="fas fa-save"></i> Save Profile</button>
+      </div>
+      <div class="card">
+        <div class="sec-title" style="margin-top:0"><i class="fas fa-lock"></i> Change Password</div>
+        <div class="form-group"><label><i class="fas fa-lock"></i> New Password</label>
+          <div style="position:relative">
+            <input class="input-field" type="password" id="new-pass" placeholder="Enter new password (min 6 chars)" style="padding-right:42px">
+            <i class="fas fa-eye" id="new-pass-eye" onclick="togglePass('new-pass','new-pass-eye')" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text3);cursor:pointer;font-size:14px"></i>
+          </div>
+        </div>
+        <div class="form-group"><label><i class="fas fa-lock"></i> Confirm New Password</label>
+          <div style="position:relative">
+            <input class="input-field" type="password" id="confirm-pass" placeholder="Repeat new password" style="padding-right:42px">
+            <i class="fas fa-eye" id="confirm-pass-eye" onclick="togglePass('confirm-pass','confirm-pass-eye')" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text3);cursor:pointer;font-size:14px"></i>
+          </div>
+        </div>
+        <div id="pass-msg" style="display:none;padding:10px 13px;border-radius:10px;font-size:12px;font-weight:600;margin-bottom:10px"></div>
+        <button class="btn btn-danger" onclick="changePassword()"><i class="fas fa-key"></i> Update Password</button>
+      </div>
+      <div class="card" style="border:1.5px solid rgba(239,68,68,.2)">
+        <div class="sec-title" style="margin-top:0;color:var(--danger)"><i class="fas fa-sign-out-alt"></i> Account</div>
+        <button class="btn btn-outline" onclick="doLogout()" style="border-color:var(--danger);color:var(--danger)"><i class="fas fa-sign-out-alt"></i> Sign Out of DukaPro</button>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="page" id="page-closing">
+      <div class="card">
+        <div class="sec-title" style="margin-top:0"><i class="fas fa-lock"></i> Closing Stock Check</div>
+        <p style="font-size:12px;color:var(--text3);margin-bottom:14px;line-height:1.7">Count your physical stock and enter actual quantities. DukaPro will highlight any discrepancies automatically.</p>
+        <div id="closing-table-wrap"><div class="empty-state"><div class="empty-img">📦</div><div class="empty-title">No stock items yet</div></div></div>
+        <div style="margin-top:12px" id="closing-btn-wrap"></div>
+      </div>
+    </div>
+
+    <!-- REPORT -->
+    <div class="page" id="page-report">
+      <div class="date-bar">
+        <i class="fas fa-calendar" style="color:var(--p1);font-size:13px"></i>
+        <button class="date-nav" onclick="changeReportDay(-1)"><i class="fas fa-chevron-left"></i></button>
+        <input type="date" id="rpt-date" onchange="renderReport()">
+        <button class="date-nav" onclick="changeReportDay(1)"><i class="fas fa-chevron-right"></i></button>
+        <button class="today-pill" onclick="goReportToday()">Today</button>
+      </div>
+      <div class="rpt-hero">
+        <div class="rpt-hero-bg"></div>
+        <div class="rpt-label"><i class="fas fa-balance-scale"></i> Net Balance (Sales – Expenses)</div>
+        <div class="rpt-val" id="rpt-net">KSh 0.00</div>
+        <div class="rpt-sub" id="rpt-date-label"></div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-row"><div class="sum-key"><i class="fas fa-shopping-bag"></i> Total Sales</div><div class="sum-val col-g" id="rpt-total">KSh 0.00</div></div>
+        <div class="sum-row"><div class="sum-key"><i class="fas fa-mobile-alt"></i> M-Pesa Sales</div><div class="sum-val" id="rpt-mpesa">KSh 0.00</div></div>
+        <div class="sum-row"><div class="sum-key"><i class="fas fa-coins"></i> Cash Sales</div><div class="sum-val" id="rpt-cash">KSh 0.00</div></div>
+        <div class="sum-row"><div class="sum-key"><i class="fas fa-receipt"></i> Total Expenses</div><div class="sum-val col-r" id="rpt-exp">KSh 0.00</div></div>
+        <div class="sum-row"><div class="sum-key"><i class="fas fa-chart-line"></i> Gross Profit</div><div class="sum-val col-p" id="rpt-profit">KSh 0.00</div></div>
+      </div>
+      <div class="sec-title"><i class="fas fa-boxes"></i> Stock Status</div>
+      <div class="sum-card" id="rpt-stock"></div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+        <button class="btn btn-primary" onclick="exportPDF()"><i class="fas fa-download"></i> Export PDF Report</button>
+        <button class="btn btn-outline" onclick="clearDayData()"><i class="fas fa-trash"></i> Clear This Day's Data</button>
+      </div>
+    </div>
+
+  </main>
+  <button class="fab" onclick="navigate('sales')" title="Quick Sale"><i class="fas fa-plus"></i></button>
+  <button class="fab2" onclick="navigate('report')"><i class="fas fa-file-invoice"></i> Report</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script src="js/state.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/db.js"></script>
+<script src="js/stock.js"></script>
+<script src="js/sales.js"></script>
+<script src="js/expenses.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/history.js"></script>
+<script src="js/closing.js"></script>
+<script src="js/report.js"></script>
+</body>
+</html>
